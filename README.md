@@ -20,7 +20,7 @@ python videoConverter.py ./VideoFile/test.mp4 ./VideoOutput/output9.mp4 cartooni
 
 Examples:
 
-https://github.com/davidyuanst/FakeFaceVideoConverter/FakeFaceVideoConverter/VideoOutput
+[https://github.com/davidyuanst/FakeFaceVideoConverter/FakeFaceVideoConverter/VideoOutput](https://github.com/davidyuanst/FakeFaceVideoConverter/tree/main/FakeFaceVideoConverter/VideoOutput)
 
 
 Install to CPU device:
