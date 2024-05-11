@@ -11,7 +11,7 @@ python videoConverter.py ./VideoFile/test.mp4 ./VideoOutput/output9.mp4 cartooni
 
 
 
-Install for CPU device:
+Install to CPU device:
 
 ffmpeg-python==0.2.0
 
@@ -24,7 +24,7 @@ tensorflow-cpu==2.7.0
 tf-slim==1.1.0
 
 
-Install for GPU(RTX3060 above) device:
+Install to GPU(RTX3060 above) device:
 
 ffmpeg-python==0.2.0
 
