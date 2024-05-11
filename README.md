@@ -3,7 +3,7 @@ Trained virtual face model, quickly change the face of the video, python tensorf
 
 <b>Features:</b>
 
-Highest resolution: unlimited width X 1280
+Highest resolution: (unlimited width) x 1280
 
 Speed: 1/fps (i9 CPU)
 
