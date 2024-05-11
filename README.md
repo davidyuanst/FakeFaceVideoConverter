@@ -18,9 +18,12 @@ python videoConverter.py --test ./VideoFile/test.mp4 ./VideoOutput/output1.mp4 c
 python videoConverter.py ./VideoFile/test.mp4 ./VideoOutput/output9.mp4 cartoonized_pb_train_output_Man_Japanese3_1h
 
 
-<b>Example Videos:</b>
+<b>Example output Videos:</b>
 
 [https://github.com/davidyuanst/FakeFaceVideoConverter/FakeFaceVideoConverter/VideoOutput](https://github.com/davidyuanst/FakeFaceVideoConverter/tree/main/FakeFaceVideoConverter/VideoOutput)
+
+<b>Example input Videos:</b>
+[https://www.pexels.com/search/videos/girl/](https://www.pexels.com/search/videos/girl/)
 
 
 <b>Install to CPU device:</b>
