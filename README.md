@@ -28,6 +28,8 @@ ffmpeg [download](https://ffmpeg.org/download.html)
 
 ffmpeg-python==0.2.0
 
+mtcnn                        0.1.1
+
 numpy
 
 opencv-python==4.9.0.80
@@ -44,6 +46,8 @@ Python==3.7.12
 ffmpeg [download](https://ffmpeg.org/download.html)
 
 ffmpeg-python==0.2.0
+
+mtcnn                        0.1.1
 
 numpy
 
