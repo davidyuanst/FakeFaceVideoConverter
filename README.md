@@ -18,7 +18,9 @@ Create a public video:
 python videoConverter.py ./VideoFile/test.mp4 ./VideoOutput/output9.mp4 cartoonized_pb_train_output_Man_Japanese3_1h
 
 
+Examples:
 
+https://github.com/davidyuanst/FakeFaceVideoConverter/FakeFaceVideoConverter/VideoOutput
 
 
 Install to CPU device:
