@@ -7,7 +7,7 @@ Highest resolution: (unlimited width) x 1280
 
 Speed: 1/fps (i5 CPU)
 
-
+<b>Models folder:</b> ./output_pb
 
 <b>Create test video:</b> python videoConverter.py --test ./VideoInput/test.mp4 ./VideoOutput/output1.mp4 cartoonized_pb_train_output_girl_ChineseTangwei_0h
 
