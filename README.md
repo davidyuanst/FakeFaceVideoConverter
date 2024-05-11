@@ -13,17 +13,17 @@ Speed: 1/fps (i9 CPU)
 
 python videoConverter.py --test ./VideoFile/test.mp4 ./VideoOutput/output1.mp4 cartoonized_pb_train_output_girl_ChineseTangwei_0h
 
-Create a public video:
+<b>Create a public video:</b>
 
 python videoConverter.py ./VideoFile/test.mp4 ./VideoOutput/output9.mp4 cartoonized_pb_train_output_Man_Japanese3_1h
 
 
-Examples:
+<b>Example Videos:</b>
 
 [https://github.com/davidyuanst/FakeFaceVideoConverter/FakeFaceVideoConverter/VideoOutput](https://github.com/davidyuanst/FakeFaceVideoConverter/tree/main/FakeFaceVideoConverter/VideoOutput)
 
 
-Install to CPU device:
+<b>Install to CPU device:</b>
 
 Python==3.7
 
@@ -40,7 +40,7 @@ tensorflow-cpu==2.7.0
 tf-slim==1.1.0
 
 
-Install to GPU(RTX3060 above) device:
+<b>Install to GPU(RTX3060 above) device:</b>
 
 Python==3.7
 
