@@ -14,11 +14,12 @@ import numpy as np
 import os
 import subprocess
 import cv2
+from mtcnn.mtcnn import MTCNN
 
 parser = argparse.ArgumentParser(description='Example streaming ffmpeg numpy processing')
 parser.add_argument('in_filename', default = './VideoFile/C141.mp4', type = str, help='Input filename')
 parser.add_argument('out_filename', default = './VideoOutput/C141.mp4', type = str, help='Output filename')
-parser.add_argument('model_filename', default = 'cartoonized_pb_train_output_girl_Chinese5_4h', type = str, help='Model filename')
+parser.add_argument('model_filename', default = './model_pb/cartoonized_pb_train_output_girl_Chinese5_4h', type = str, help='Model filename')
 parser.add_argument('--test', action='store_true', help='Output comparison video')
 
 DEFAULT_HEIGHT=1280
@@ -132,7 +133,7 @@ def run(in_filename, out_filename, process_frame,test):
 class DeepDream(object):
     
     def __init__(self,model_folder):
-        pb_path = './output_pb/'+model_folder+'/frozen_model.pb'
+        pb_path = model_folder+'/frozen_model.pb'
         print("DeepDream Init:",pb_path)
         self._sess = tf.Session()
         with gfile.FastGFile(pb_path,'rb') as f:
@@ -143,26 +144,28 @@ class DeepDream(object):
             #for i,n in enumerate(graph_def.node):
             #    print("Name of the node -%s"%n.name)
 
-
+        
         self._sess.run(tf.global_variables_initializer())
-
+        
         self._input_x = self._sess.graph.get_tensor_by_name('x:0')
         prediction = self._sess.graph.get_tensor_by_name('prediction:0')
 
         self._pred=tf.transpose(prediction,perm=[0,2,3,1])
-
+        self._face_detector = MTCNN()
         print(self._input_x,prediction,self._pred)
 
     def process_frame(self, frame,test):
         
-        h,w,c=frame.shape
+        hf,wf,c=frame.shape
         
 
-        width,height=get_new_size(w,h)
+        width,height=get_new_size(wf,hf)
             
         #logger.info('process frame')
         #print("process_frame",width,height)
         
+
+     
         frameBGR = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR) 
         
         frame_resize8 = cv2.resize(frameBGR, (width, height))
@@ -170,8 +173,56 @@ class DeepDream(object):
         frame_resize = frame_resize8.astype(np.float32)
         frame_resize = frame_resize.reshape([1,height,width,3])
 
-        retImg = self._sess.run(self._pred, {self._input_x:frame_resize})
+        #frame_resize8RGB = cv2.cvtColor(frame_resize8, cv2.COLOR_BGR2RGB) 
+        faces = self._face_detector.detect_faces(frame_resize8)
         
+        retImg = self._sess.run(self._pred, {self._input_x:frame_resize})
+        #retImg = frame_resize
+
+        
+        for face in faces:
+            x, y, w, h = face['box']
+            #print(x,y,w,h," ")
+            if ((x>10) or (y>10)):
+                cx=x+w/2
+                cy=y+h/2
+                w=int((w*2)/16)*16
+                h=int((h*2)/16)*16
+                if w<480:
+                    w=480
+                if h<640:
+                    h=640
+                
+                if h>height :
+                    h = height
+                
+                if w>width :
+                    w = width
+                
+                x=int(cx-w/2)
+                y=int(cy-h/2)
+                
+                if(x<0):
+                    x=0
+                if(y<0):
+                    y=0
+                if(x+w>width):
+                    x=width-w-1
+                if(y+h>height):
+                    y=height-h-1
+                if (x>=0) and (y>=0) and (x+w<=width) and (y+h<=height) :    
+                    #print(x,y,w,h," ")
+                    
+                    frame_resize_crop = frame_resize[:,y:y+h,x:x+w,:]
+                    retImgCrop = self._sess.run(self._pred, {self._input_x:frame_resize_crop})
+                    _,hR,wR,c=retImgCrop.shape
+                    retImgCrop = retImgCrop.reshape([hR,wR,3])
+                    retImgCrop=cv2.resize(retImgCrop,(w,h))
+                    if test:
+                        cv2.rectangle(retImgCrop, (5, 5), (w-5, h-5), (255, 0, 0), 2)
+                    retImgCrop = retImgCrop.reshape([1,h,w,3])
+                    retImg[0,y:y+h,x:x+w,:]=retImgCrop
+                    
         """
         if (w>h):
             left = int ((width - height) /2)
@@ -182,10 +233,10 @@ class DeepDream(object):
         """
         #retImg[:,:,0:int(width/2),:] = frame_resize[:,:,0:int(width/2),:]
         
-    
         retImg8 = retImg.astype(np.uint8).reshape([height,width,3])
+        
         if(test):
-            if(h>w):
+            if(hf>wf):
                 retImg2 = np.concatenate((frame_resize8,retImg8),axis=1)
             else:
                 retImg2 = np.concatenate((frame_resize8,retImg8),axis=0)
