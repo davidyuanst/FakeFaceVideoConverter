@@ -9,9 +9,8 @@ Speed: 1/fps (i5 CPU)
 
 <b>Models folder:</b> ./output_pb
 
-<b>Create test video:</b> python videoConverter.py --test ./VideoInput/test.mp4 ./VideoOutput/output1.mp4 cartoonized_pb_train_output_girl_ChineseTangwei_0h
-
-<b>Create release video:</b> python videoConverter.py ./VideoInput/test.mp4 ./VideoOutput/output9.mp4 cartoonized_pb_train_output_Man_Japanese3_1h
+<b>Create test video:</b> python videoConverter.py --test ./VideoFile/9_04_09_19.mp4 ./VideoOutput/output1.mp4 ./model_pb/pb_train_output_girl_ChineseTangwei_0h
+<b>Create release video:</b> python videoConverter.py ./VideoFile/4216631.mp4 ./VideoOutput/output12.mp4 ./model_pb/pb_train_output_Man_Japanese3_1h
 
 
 <b>Example output Videos:</b>
