@@ -21,7 +21,7 @@ parser.add_argument('out_filename', default = './VideoOutput/C141.mp4', type = s
 parser.add_argument('model_filename', default = 'cartoonized_pb_train_output_girl_Chinese5_4h', type = str, help='Model filename')
 parser.add_argument('--test', action='store_true', help='Output comparison video')
 
-DEFAULT_HEIGHT=800
+DEFAULT_HEIGHT=1280
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
@@ -36,12 +36,9 @@ def get_video_size(filename):
     return width, height
 
 def get_new_size(w,h):
-        
-        if(w<h):
-            height = DEFAULT_HEIGHT
-        else:
-            height = int(DEFAULT_HEIGHT*0.75)
-            
+    
+        height = DEFAULT_HEIGHT
+
         HWrate=h/w
 
         width = int(height / HWrate /16.0) * 16
@@ -175,13 +172,14 @@ class DeepDream(object):
 
         retImg = self._sess.run(self._pred, {self._input_x:frame_resize})
         
+        """
         if (w>h):
             left = int ((width - height) /2)
             right = int(left + height)
             frame_resize_crop = frame_resize[:,:,left:right,:]
             retImgCrop = self._sess.run(self._pred, {self._input_x:frame_resize_crop})
             retImg[:,:,left:right,:] = retImgCrop
-        
+        """
         #retImg[:,:,0:int(width/2),:] = frame_resize[:,:,0:int(width/2),:]
         
     
