@@ -1,7 +1,7 @@
 # FakeFaceVideoConverter
 Trained virtual face model, quickly change the face of the video, python tensorflow project for windows 10/11 and no GPU required.
 
-Features:
+<b>Features:</b>
 
 Highest resolution: unlimited width X 1280
 
@@ -9,7 +9,7 @@ Speed: 1/fps (i9 CPU)
 
 
 
-Create a mirror test video:
+<b>Create a mirror test video:</b>
 
 python videoConverter.py --test ./VideoFile/test.mp4 ./VideoOutput/output1.mp4 cartoonized_pb_train_output_girl_ChineseTangwei_0h
 
