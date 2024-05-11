@@ -15,7 +15,7 @@ Speed: 1/fps (i5 CPU)
 
 
 <b>Example output Videos:</b>
-[https://github.com/davidyuanst/FakeFaceVideoConverter/FakeFaceVideoConverter/VideoOutput](https://github.com/davidyuanst/FakeFaceVideoConverter/tree/main/FakeFaceVideoConverter/VideoOutput)
+[FakeFaceVideoConverter/VideoOutput](https://github.com/davidyuanst/FakeFaceVideoConverter/tree/main/FakeFaceVideoConverter/VideoOutput)
 
 <b>Example input Videos:</b>
 [https://www.pexels.com/search/videos/girl/](https://www.pexels.com/search/videos/girl/)
