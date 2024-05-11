@@ -23,7 +23,7 @@ Speed: 1/fps (i5 CPU)
 
 <b>Install to CPU device:</b>
 
-Python==3.7
+Python==3.7.12
 
 ffmpeg
 
@@ -40,7 +40,7 @@ tf-slim==1.1.0
 
 <b>Install to GPU(RTX3060 above) device:</b>
 
-Python==3.7
+Python==3.7.12
 
 ffmpeg
 
