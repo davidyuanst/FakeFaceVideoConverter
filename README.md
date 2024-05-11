@@ -25,7 +25,7 @@ Speed: 1/fps (i5 CPU)
 
 Python==3.7.12
 
-ffmpeg
+ffmpeg [download](https://ffmpeg.org/download.html)
 
 ffmpeg-python==0.2.0
 
@@ -42,7 +42,7 @@ tf-slim==1.1.0
 
 Python==3.7.12
 
-ffmpeg
+ffmpeg [download](https://ffmpeg.org/download.html)
 
 ffmpeg-python==0.2.0
 
