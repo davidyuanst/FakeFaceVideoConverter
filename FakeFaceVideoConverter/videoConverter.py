@@ -22,7 +22,8 @@ parser.add_argument('out_filename', default = './VideoOutput/C141.mp4', type = s
 parser.add_argument('model_filename', default = './model_pb/cartoonized_pb_train_output_girl_Chinese5_4h', type = str, help='Model filename')
 parser.add_argument('--test', action='store_true', help='Output comparison video')
 
-DEFAULT_HEIGHT=1280
+DEFAULT_HEIGHT_P=1680
+DEFAULT_HEIGHT_L=1280
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
@@ -38,13 +39,16 @@ def get_video_size(filename):
 
 def get_new_size(w,h):
     
-        height = DEFAULT_HEIGHT
+    if w>h :
+        height = DEFAULT_HEIGHT_L
+    else:
+        height = DEFAULT_HEIGHT_P
 
-        HWrate=h/w
+    HWrate=h/w
 
-        width = int(height / HWrate /16.0) * 16
-        
-        return width,height
+    width = int(height / HWrate /16.0) * 16
+
+    return width,height
         
 def start_ffmpeg_process1(in_filename):
     logger.info('Starting ffmpeg process1')
@@ -149,11 +153,30 @@ class DeepDream(object):
         
         self._input_x = self._sess.graph.get_tensor_by_name('x:0')
         prediction = self._sess.graph.get_tensor_by_name('prediction:0')
-
+        self._PrevFaces=[]
         self._pred=tf.transpose(prediction,perm=[0,2,3,1])
         self._face_detector = MTCNN()
         print(self._input_x,prediction,self._pred)
 
+    def process_model(self,frame, zoom=False):
+        
+        height,width,c=frame.shape
+        if(height>640) and zoom:
+            whrate=width/height
+            newHeight=640
+            newWidth = int(newHeight * whrate/16)*16
+            frameResize=cv2.resize(frame, (newWidth, newHeight))
+            frameResize=frameResize.reshape([1,newHeight,newWidth,3])
+            retImgResize = self._sess.run(self._pred, {self._input_x:frameResize})
+            retImgResize=retImgResize.reshape([newHeight,newWidth,3])
+            retImg=cv2.resize(retImgResize, (width, height))
+        else:
+            frame = frame.reshape([1,height,width,3])
+            retImg = self._sess.run(self._pred, {self._input_x:frame})
+            retImg = retImg.reshape([height,width,3])
+            
+        return retImg
+        
     def process_frame(self, frame,test):
         
         hf,wf,c=frame.shape
@@ -171,13 +194,16 @@ class DeepDream(object):
         frame_resize8 = cv2.resize(frameBGR, (width, height))
         
         frame_resize = frame_resize8.astype(np.float32)
-        frame_resize = frame_resize.reshape([1,height,width,3])
 
         #frame_resize8RGB = cv2.cvtColor(frame_resize8, cv2.COLOR_BGR2RGB) 
         faces = self._face_detector.detect_faces(frame_resize8)
+        if(len(faces)==0 and len(self._PrevFaces)>0):
+            faces = self._PrevFaces
+        self._PrevFaces=faces
         
-        retImg = self._sess.run(self._pred, {self._input_x:frame_resize})
-        #retImg = frame_resize
+        #retImg = self._sess.run(self._pred, {self._input_x:frame_resize})
+        retImg = self.process_model(frame_resize,False)
+
 
         
         for face in faces:
@@ -188,10 +214,10 @@ class DeepDream(object):
                 cy=y+h/2
                 w=int((w*2)/16)*16
                 h=int((h*2)/16)*16
-                if w<480:
-                    w=480
-                if h<640:
-                    h=640
+                if w<240:
+                    w=240
+                if h<320:
+                    h=320
                 
                 if h>height :
                     h = height
@@ -207,21 +233,19 @@ class DeepDream(object):
                 if(y<0):
                     y=0
                 if(x+w>width):
-                    x=width-w-1
+                    x=width-w
                 if(y+h>height):
-                    y=height-h-1
+                    y=height-h
                 if (x>=0) and (y>=0) and (x+w<=width) and (y+h<=height) :    
                     #print(x,y,w,h," ")
                     
-                    frame_resize_crop = frame_resize[:,y:y+h,x:x+w,:]
-                    retImgCrop = self._sess.run(self._pred, {self._input_x:frame_resize_crop})
-                    _,hR,wR,c=retImgCrop.shape
-                    retImgCrop = retImgCrop.reshape([hR,wR,3])
+                    frame_resize_crop = frame_resize[y:y+h,x:x+w,:]
+                    #etImgCrop = self._sess.run(self._pred, {self._input_x:frame_resize_crop})
+                    retImgCrop = self.process_model(frame_resize_crop,True)
                     retImgCrop=cv2.resize(retImgCrop,(w,h))
                     if test:
                         cv2.rectangle(retImgCrop, (5, 5), (w-5, h-5), (255, 0, 0), 2)
-                    retImgCrop = retImgCrop.reshape([1,h,w,3])
-                    retImg[0,y:y+h,x:x+w,:]=retImgCrop
+                    retImg[y:y+h,x:x+w,:]=retImgCrop
                     
         """
         if (w>h):
