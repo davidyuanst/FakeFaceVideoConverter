@@ -1,5 +1,5 @@
 # Fake Face Video Converter
-Trained virtual face model, quickly change the face of the video, python tensorflow project for windows 10/11 and no GPU required.
+Pretrained fake face model, quickly change the face of the video, python tensorflow project for windows 10/11 and no GPU required.
 
 <b>Features:</b>
 
