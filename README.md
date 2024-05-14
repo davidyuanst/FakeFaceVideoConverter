@@ -11,7 +11,7 @@ In order to ensure privacy and prevent abuse, training code and technology are n
 
 Highest resolution: (unlimited width) x (800-1680)
 
-Speed: 1/fps (i5 CPU)
+Speed: 1/fps (i5 CPU) 15/fps (RTX3060)
 
 <b>Models folder:</b> ./FakeFaceVideoConverter/model_pb/
 
