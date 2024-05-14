@@ -1,6 +1,6 @@
 # Fake Face Video Converter
 
-The purpose of the system is mainly for network anchors whose looks are not perfect enough, so that they can apply makeup to optimize their faces without having to hide behind the screen and only provide voice.
+The purpose of the system is mainly for network anchors whose looks are not perfect enough, so that they can apply makeup to optimize their faces/hair without having to hide behind the screen and only provide voice.
 
 Pretrained fake face model, quickly change the face of the video, python tensorflow project for windows 10/11 and no GPU required.
 
