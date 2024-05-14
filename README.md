@@ -1,4 +1,7 @@
 # Fake Face Video Converter
+
+The purpose of the system is mainly for network anchors whose looks are not perfect enough, so that they can apply makeup to optimize their faces without having to hide behind the screen and only provide voice.
+
 Pretrained fake face model, quickly change the face of the video, python tensorflow project for windows 10/11 and no GPU required.
 
 All pre-trained models use the StableDiffusion algorithm to generate virtual characters, which are not taken from real people's faces, nor do they correspond to someone in the real world.
