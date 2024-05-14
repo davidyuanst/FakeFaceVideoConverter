@@ -25,6 +25,7 @@ Speed: 1fps (i5 CPU) 15fps (RTX3060)
 
 [![Example Video](https://img.youtube.com/vi/hTNy9AyH82s/1.jpg)](https://www.youtube.com/watch?v=hTNy9AyH82s)
 [![Example Video](https://img.youtube.com/vi/1k2Gbt4NmB4/1.jpg)](https://www.youtube.com/watch?v=1k2Gbt4NmB4)
+[![Example Video](https://img.youtube.com/vi/fKr3fu5E6wo/1.jpg)](https://www.youtube.com/watch?v=fKr3fu5E6wo)
 
 <b>Example input Videos:</b>
 [https://www.pexels.com/search/videos/girl/](https://www.pexels.com/search/videos/girl/)
