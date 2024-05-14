@@ -4,7 +4,7 @@ The purpose of the system is mainly for network anchors whose looks are not perf
 
 Pretrained fake face model, quickly change the face of the video, python tensorflow project for windows 10/11 and no GPU required.
 
-All pre-trained models use the StableDiffusion algorithm to generate virtual characters, which are not taken from real people's faces, nor do they correspond to someone in the real world.
+All pre-trained models use the StableDiffusion random algorithm to generate virtual characters, which are not taken from real people's faces, nor do they correspond to someone in the real world.
 In order to ensure privacy and prevent abuse, training code and technology are not provided, and only pre-trained models can be used.
 
 <b>Features:</b>
