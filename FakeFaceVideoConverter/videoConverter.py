@@ -160,12 +160,8 @@ class DeepDream(object):
         with gfile.FastGFile(pb_path,'rb') as f:
             graph_def = tf.GraphDef()
             graph_def.ParseFromString(f.read())
-            self._sess.graph.as_default()
             tf.import_graph_def(graph_def,name='')
-            #for i,n in enumerate(graph_def.node):
-            #    print("Name of the node -%s"%n.name)
 
-        
         self._sess.run(tf.global_variables_initializer())
         
         self._input_x = self._sess.graph.get_tensor_by_name('x:0')
@@ -178,7 +174,7 @@ class DeepDream(object):
     def process_model(self,frame, zoom=False):
         
         height,width,c=frame.shape
-        if(height>640) and zoom:
+        if zoom:
             whrate=width/height
             newHeight=640
             newWidth = int(newHeight * whrate/16)*16
@@ -211,21 +207,17 @@ class DeepDream(object):
         frame_resize = frame_resize8.astype(np.float32)
         retImg = self.process_model(frame_resize,False)
         
-        """
-        frame_resize84 = cv2.resize(frameBGR, (int(width/4), int(height/4)))
-        faces0 = self._face_detector.detect_faces(frame_resize84)
+        
+        faces0 = self._face_detector.detect_faces(frame_resize8)
         if(len(faces0)==0):
             faces = self._PrevFaces
         else:
             faces = faces0
-        self._PrevFaces=faces0
+            self._PrevFaces=faces0
 
         for face in faces:
             x, y, w, h = face['box']
-            x=x*4
-            y=y*4
-            w=w*4
-            h=h*4
+
             #print(x,y,w,h," ")
             if ((x>10) or (y>10)):
                 cx=x+w/2
@@ -233,10 +225,12 @@ class DeepDream(object):
                 w=int((w*2)/16)*16
                 h=int((h*2)/16)*16
                 
-                if w<360:
-                    w=360
-                if h<480:
-                    h=480
+                """
+                if w<240:
+                    w=240
+                if h<360:
+                    h=360
+                """
                 
                 if h>height :
                     h = height
@@ -259,17 +253,17 @@ class DeepDream(object):
                     #print(x,y,w,h," ")
                     
                     frame_resize_crop = frame_resize[y:y+h,x:x+w,:]
-                    #etImgCrop = self._sess.run(self._pred, {self._input_x:frame_resize_crop})
                     retImgCrop = self.process_model(frame_resize_crop,True)
                     retImgCrop=cv2.resize(retImgCrop,(w,h))
                     #if test:
                     #    cv2.rectangle(retImgCrop, (5, 5), (w-5, h-5), (255, 0, 0), 2)
                     retImg[y:y+h,x:x+w,:]=retImgCrop
                     
-        """
+        
         
         #retImg[:,:,0:int(width/2),:] = frame_resize[:,:,0:int(width/2),:]
         
+
         retImg8 = retImg.astype(np.uint8).reshape([height,width,3])
         
         if(test):
