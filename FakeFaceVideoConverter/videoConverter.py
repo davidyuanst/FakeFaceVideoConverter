@@ -23,7 +23,7 @@ parser.add_argument('model_filename', default = './model_pb/cartoonized_pb_train
 parser.add_argument('--test', action='store_true', help='Output comparison video')
 
 DEFAULT_HEIGHT_P=960
-DEFAULT_HEIGHT_L=640
+DEFAULT_HEIGHT_L=720
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
@@ -51,7 +51,12 @@ def get_video_size(filename):
         width =height
         height =w
         
-    return width, height
+    #fps = video_stream['r_frame_rate']
+    num_frames = float(video_stream['nb_frames'])
+    duration = float(video_stream['duration'])
+    
+    
+    return width, height 
 
 
 def get_new_size(w,h):
@@ -73,6 +78,7 @@ def start_ffmpeg_process1(in_filename):
         ffmpeg
         .input(in_filename)
         .output('pipe:', format='rawvideo', pix_fmt='rgb24')
+        #.filter('fps', fps=60, round='up')
         .compile()
     )
     return subprocess.Popen(args, stdout=subprocess.PIPE)
@@ -83,6 +89,7 @@ def start_ffmpeg_process2(out_filename, width, height):
     args = (
         ffmpeg
         .input('pipe:', format='rawvideo', pix_fmt='rgb24', s='{}x{}'.format(width, height))
+        #.filter('fps', fps=60, round='up')
         .output(out_filename, pix_fmt='yuv420p')
         .overwrite_output()
         .compile()
@@ -207,7 +214,7 @@ class DeepDream(object):
         frame_resize = frame_resize8.astype(np.float32)
         retImg = self.process_model(frame_resize,False)
         
-        
+        """
         faces0 = self._face_detector.detect_faces(frame_resize8)
         if(len(faces0)==0):
             faces = self._PrevFaces
@@ -225,12 +232,6 @@ class DeepDream(object):
                 w=int((w*2)/16)*16
                 h=int((h*2)/16)*16
                 
-                """
-                if w<240:
-                    w=240
-                if h<360:
-                    h=360
-                """
                 
                 if h>height :
                     h = height
@@ -253,16 +254,14 @@ class DeepDream(object):
                     #print(x,y,w,h," ")
                     
                     frame_resize_crop = frame_resize[y:y+h,x:x+w,:]
-                    retImgCrop = self.process_model(frame_resize_crop,True)
+                    retImgCrop = self.process_model(frame_resize_crop,False)
                     retImgCrop=cv2.resize(retImgCrop,(w,h))
                     #if test:
                     #    cv2.rectangle(retImgCrop, (5, 5), (w-5, h-5), (255, 0, 0), 2)
                     retImg[y:y+h,x:x+w,:]=retImgCrop
                     
         
-        
-        #retImg[:,:,0:int(width/2),:] = frame_resize[:,:,0:int(width/2),:]
-        
+        """
 
         retImg8 = retImg.astype(np.uint8).reshape([height,width,3])
         
@@ -281,5 +280,40 @@ class DeepDream(object):
 
 if __name__ == '__main__':
     args = parser.parse_args()
+    
+    fp25VideoFile = "./VideoOutput/cacheVideoFp25.avi"
+
+    stream = ffmpeg.input(args.in_filename)
+    stream = ffmpeg.filter(stream, 'fps', fps=25, round='up')
+    stream = ffmpeg.output(stream, fp25VideoFile)
+    ffmpeg.run(stream)
+
+
+
     process_frame = DeepDream(args.model_filename).process_frame
-    run(args.in_filename, args.out_filename,process_frame,args.test)
+
+    cacheVideo = "./VideoOutput/cacheVideo.mp4"
+    audioFile="./VideoOutput/cacheAudio.mp3"
+    process_frame = DeepDream(args.model_filename).process_frame
+    run(fp25VideoFile, cacheVideo ,process_frame,args.test)
+    
+    
+
+    result = subprocess.run("ffmpeg  -i "+args.in_filename+" -vn "+audioFile, stdout=subprocess.PIPE, shell=True, cwd="./")
+    print(result.stdout)
+        
+
+    if  os.path.exists(args.out_filename):
+        os.unlink(args.out_filename)
+    if not os.path.exists(audioFile):
+        os.rename(cacheVideo,args.out_filename)
+    else:
+        result = subprocess.run("ffmpeg -i ./VideoOutput/cacheVideo.mp4 -i "+audioFile+" -c:v copy -c:a copy -strict experimental "+args.out_filename, stdout=subprocess.PIPE, shell=True, cwd="./")
+        print(result.stdout)
+        
+    if  os.path.exists(fp25VideoFile):
+        os.unlink(fp25VideoFile)
+    if  os.path.exists(cacheVideo):
+        os.unlink(cacheVideo)
+    if  os.path.exists(audioFile):
+        os.unlink(audioFile)
