@@ -90,7 +90,7 @@ def start_ffmpeg_process2(out_filename, width, height):
         ffmpeg
         .input('pipe:', format='rawvideo', pix_fmt='rgb24', s='{}x{}'.format(width, height))
         #.filter('fps', fps=60, round='up')
-        .output(out_filename, pix_fmt='yuv420p')
+        .output(out_filename, pix_fmt='yuv420p',crf=15)
         .overwrite_output()
         .compile()
     )
@@ -281,14 +281,12 @@ class DeepDream(object):
 if __name__ == '__main__':
     args = parser.parse_args()
     
-    fp25VideoFile = "./VideoOutput/cacheVideoFp25.avi"
+    fp25VideoFile = "./VideoOutput/cacheVideoFp25.mov"
 
     stream = ffmpeg.input(args.in_filename)
     stream = ffmpeg.filter(stream, 'fps', fps=25, round='up')
-    stream = ffmpeg.output(stream, fp25VideoFile)
+    stream = ffmpeg.output(stream, fp25VideoFile,crf=5)
     ffmpeg.run(stream)
-
-
 
     process_frame = DeepDream(args.model_filename).process_frame
 
